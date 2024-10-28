@@ -1,0 +1,73 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVA Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        // Function to capitalize only the first letter of the first word
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Function to display words one by one
+        function displayWords(words) {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = '';
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < words.length) {
+                    // Capitalize only the first word's first letter
+                    if (i === 0) {
+                        words[i] = capitalizeFirstLetter(words[i]);
+                    }
+                    outputDiv.innerHTML += words[i] + ' ';
+                    outputDiv.scrollTop = outputDiv.scrollHeight;  // Auto-scroll
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 100); // Display each word every 100ms
+        }
+
+        // Display response text on page load
+        window.onload = function () {
+            const responseText = "{{ ' '.join(responses) if responses else '' }}";
+            if (responseText) {
+                const words = responseText.split(' ');
+                displayWords(words);
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Full-width header -->
+    <header>
+        <h1>AVA Bot</h1>
+    </header>
+
+    <!-- Chat container -->
+    <div class="chat-container">
+        <!-- Output box -->
+        <div id="output" class="chat-box">
+            {% if responses %}
+            <!-- Responses will be displayed here -->
+            {% endif %}
+        </div>
+
+        <!-- Input area -->
+        <div class="chat-input">
+            <form action="/retrieve" method="POST">
+                <input type="text" id="query" name="query" placeholder="Type your query..." required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Full-width footer -->
+    <footer>
+        <p>&copy; 2024 Query Search Chatbot</p>
+    </footer>
+</body>
+</html>
